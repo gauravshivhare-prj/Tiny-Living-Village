@@ -35,6 +35,10 @@ VILLAGE.audio = {
       this.toggleMute();
     });
 
+    VILLAGE.bus.on('audio:play-victory', () => {
+      this.playVictoryFanfare();
+    });
+
     // Resume AudioContext on first user interaction to satisfy browser autoplay policies
     const unlockAudio = () => {
       if (!this.ctx) {
@@ -291,6 +295,52 @@ VILLAGE.audio = {
 
   playBlip(job) {
     this.playChatter(job || 'trader');
+  },
+
+  // 9. Triumphant Victory Fanfare — ascending arpeggio C4-E4-G4-C5
+  playVictoryFanfare() {
+    if (this.isMuted || !this._ensureContext()) return;
+
+    const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+    notes.forEach((freq, idx) => {
+      const t = this.ctx.currentTime + idx * 0.15;
+
+      // Main note oscillator
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.4, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(t);
+      osc.stop(t + 0.5);
+
+      // Harmonics for richness
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, t);
+      gain2.gain.setValueAtTime(0.15, t);
+      gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc2.connect(gain2);
+      gain2.connect(this.sfxGain);
+      osc2.start(t);
+      osc2.stop(t + 0.4);
+
+      // Reverb tail via delayed copy
+      const oscRev = this.ctx.createOscillator();
+      const gainRev = this.ctx.createGain();
+      oscRev.type = 'sine';
+      oscRev.frequency.setValueAtTime(freq, t + 0.05);
+      gainRev.gain.setValueAtTime(0.08, t + 0.05);
+      gainRev.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+      oscRev.connect(gainRev);
+      gainRev.connect(this.sfxGain);
+      oscRev.start(t + 0.05);
+      oscRev.stop(t + 0.7);
+    });
   },
 
   // 8. Generative Cozy Ambient Music (Pentatonic / Lydian Lullaby)

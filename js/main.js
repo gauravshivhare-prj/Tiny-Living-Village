@@ -126,6 +126,12 @@ VILLAGE.main = {
 
     // Audio module init
     VILLAGE.audio.init();
+
+    // Victory modal buttons
+    const btnVC = document.getElementById('btnVictoryContinue');
+    if (btnVC) btnVC.onclick = () => { document.getElementById('victoryModal').style.display = 'none'; };
+    const btnVN = document.getElementById('btnVictoryNew');
+    if (btnVN) btnVN.onclick = () => { document.getElementById('victoryModal').style.display = 'none'; VILLAGE.main.startNewGame(Math.random()*999999|0); };
   },
 
   _dismissTitle() {
@@ -149,6 +155,7 @@ VILLAGE.main = {
     VILLAGE.memory.init(state);
     VILLAGE.economy.init(state);
     VILLAGE.events.init(state);
+    if (VILLAGE.victory) VILLAGE.victory.init(state);
     VILLAGE.save.init(state);
 
     // Initialize canvas engine and UI
@@ -175,6 +182,7 @@ VILLAGE.main = {
     VILLAGE.memory.init(loadedState);
     VILLAGE.economy.init(loadedState);
     VILLAGE.events.init(loadedState);
+    if (VILLAGE.victory) VILLAGE.victory.init(loadedState);
     VILLAGE.save.init(loadedState);
 
     VILLAGE.engine.init(canvas, loadedState);
@@ -249,13 +257,21 @@ VILLAGE.main = {
         break;
 
       case 4:
-        titleEl.textContent = 'Rumors, Feuds & Emergent Stories';
+        titleEl.textContent = 'Rumors, Feuds & Win Conditions';
         bodyEl.innerHTML = `
           <p>Watch social drama unfold in real time:</p>
           <ul>
             <li>In the evening, villagers gather around the campfire to chat and trade.</li>
             <li>Whispers mutate as they spread! Turn on the <strong>Rumor Map (R)</strong> to visualize information flowing between neighbors.</li>
             <li>Arguments can spark feuds, while heartfelt gifts or apologies can heal broken bonds.</li>
+          </ul>
+          <p><strong>🏆 Win Conditions (all 5 must be met):</strong></p>
+          <ul>
+            <li>All 12 villagers alive and happy (Mood &gt; 40%)</li>
+            <li>Food reserves ≥ 80</li>
+            <li>Build 6+ structures</li>
+            <li>No active feuds between villagers</li>
+            <li>Accumulate 30+ emeralds</li>
           </ul>
         `;
         btnNext.textContent = 'Begin Simulation! 🌟';

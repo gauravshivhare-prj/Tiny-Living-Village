@@ -239,5 +239,42 @@ VILLAGE.economy = {
     this.activeBuildType = null;
     VILLAGE.bus.emit('economy:build-mode-changed', { activeType: null });
     return true;
+  },
+
+  demolishBuilding(state, buildingId) {
+    const b = state.buildings.find(bld => bld.id === buildingId);
+    if (!b) return false;
+    return this.demolishBuildingAt(state, b.x, b.y);
+  },
+
+  upgradeBuilding(state, buildingId) {
+    const b = state.buildings.find(bld => bld.id === buildingId);
+    if (!b) return false;
+    const nextLevel = (b.level || 1) + 1;
+    const costWood = 15 * nextLevel;
+    const costStone = 10 * nextLevel;
+    if (state.resources.wood >= costWood && state.resources.stone >= costStone) {
+      state.resources.wood -= costWood;
+      state.resources.stone -= costStone;
+      b.level = nextLevel;
+      VILLAGE.stateModule.addLog(state, `Upgraded ${b.name} to Level ${b.level}!`, 'economy');
+      if (VILLAGE.ui && VILLAGE.ui.showToast) {
+        VILLAGE.ui.showToast(`⬆️ Upgraded ${b.name} to Lv${b.level}!`, 'success', 3500);
+      }
+      return true;
+    } else {
+      if (VILLAGE.ui && VILLAGE.ui.showToast) {
+        VILLAGE.ui.showToast(`❌ Need ${costWood} Wood & ${costStone} Stone to upgrade!`, 'warn', 3500);
+      }
+      return false;
+    }
+  },
+
+  getBuildingProductionRate(state, buildingId) {
+    const b = state.buildings.find(bld => bld.id === buildingId);
+    if (!b) return null;
+    if (b.type === 'farm') return '+' + (2 * (b.level || 1)) + ' Food';
+    if (b.type === 'market') return '+' + (1 * (b.level || 1)) + ' Emerald';
+    return null;
   }
 };

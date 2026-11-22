@@ -840,3 +840,306 @@ canvas#gameCanvas:active {
   justify-content: flex-end;
   margin-top: 20px;
 }
+
+/* ---------------- HUD Population Badge ---------------- */
+.hud-pop {
+  font-size: 10px;
+  color: #80cbc4;
+  background: rgba(20, 30, 45, 0.65);
+  border: 1px solid rgba(128, 203, 196, 0.4);
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+/* ---------------- Toast Notification System ---------------- */
+.toast-container {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast {
+  min-width: 240px;
+  max-width: 340px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #f0f4f8;
+  background: rgba(20, 24, 34, 0.94);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  border-left: 4px solid #64b5f6;
+  pointer-events: auto;
+  animation: toast-slide-in 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.toast.toast-fadeout {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.toast-info    { border-left-color: #42a5f5; }
+.toast-success { border-left-color: #66bb6a; }
+.toast-warn    { border-left-color: #ffa726; }
+.toast-danger  { border-left-color: #ef5350; }
+.toast-rumor   { border-left-color: #ab47bc; }
+
+/* ---------------- Right-Click Context Menu ---------------- */
+.context-menu {
+  position: fixed;
+  min-width: 170px;
+  background: #181d28;
+  border: 1px solid #37474f;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+  z-index: 2000;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+.context-menu.hidden {
+  display: none;
+}
+
+.ctx-item {
+  padding: 9px 14px;
+  font-size: 11px;
+  color: #cfd8dc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.12s ease;
+  user-select: none;
+}
+
+.ctx-item:hover {
+  background: #263238;
+  color: var(--accent-gold);
+}
+
+/* ---------------- Hover Tooltip ---------------- */
+.hover-tooltip {
+  position: fixed;
+  background: rgba(14, 18, 26, 0.92);
+  color: #eceff1;
+  border: 1px solid #455a64;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  pointer-events: none;
+  z-index: 1500;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hover-tooltip.hidden {
+  display: none;
+}
+
+/* ---------------- Building Info Card ---------------- */
+.building-card {
+  position: fixed;
+  bottom: 85px;
+  left: 20px;
+  width: 230px;
+  background: rgba(22, 27, 38, 0.95);
+  border: 1px solid #455a64;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 500;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+}
+
+.building-card.hidden {
+  display: none;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--accent-gold);
+  margin-bottom: 8px;
+  border-bottom: 1px solid #37474f;
+  padding-bottom: 5px;
+}
+
+.card-info-row {
+  font-size: 10px;
+  color: #b0bec5;
+  margin-bottom: 5px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.card-actions .mini-btn {
+  flex: 1;
+  text-align: center;
+  font-size: 9px;
+  padding: 5px 6px;
+}
+
+.btn-danger {
+  border-color: #e57373 !important;
+  color: #ef9a9a !important;
+}
+
+.btn-danger:hover {
+  background: #c62828 !important;
+  color: #fff !important;
+}
+
+/* ---------------- Win Goals Sidebar Panel ---------------- */
+.goals-panel {
+  position: fixed;
+  right: 18px;
+  top: 72px;
+  width: 220px;
+  background: rgba(18, 23, 34, 0.90);
+  border: 1px solid #37474f;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 400;
+  max-height: 55vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.goals-header {
+  font-size: 11px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+  padding-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.goal-item {
+  font-size: 10px;
+  line-height: 1.4;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.goal-item.goal-done {
+  color: #a5d6a7;
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.goal-item.goal-pending {
+  color: #90a4ae;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ---------------- Victory Screen Modal ---------------- */
+.victory-card {
+  max-width: 520px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #161b33 0%, #0c101c 100%);
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.35);
+  padding: 28px 24px;
+}
+
+.victory-title {
+  font-size: 22px;
+  color: #ffd700;
+  margin: 0 0 8px;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.6);
+}
+
+.victory-subtitle {
+  color: #90caf9;
+  margin: 0 0 18px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.victory-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.victory-stat-item {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.victory-stat-label {
+  color: #90caf9;
+  display: block;
+  font-size: 9px;
+  margin-bottom: 2px;
+}
+
+.victory-stat-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.victory-goals {
+  text-align: left;
+  margin: 14px 0;
+  font-size: 11px;
+  color: #c8e6c9;
+  background: rgba(46, 125, 50, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.victory-goal-item {
+  margin: 5px 0;
+}
+
+.victory-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Confetti animation */
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(350px) rotate(720deg); opacity: 0; }
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  animation: confetti-fall 2.5s ease-in forwards;
+  z-index: 10;
+}

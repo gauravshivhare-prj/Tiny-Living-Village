@@ -131,8 +131,13 @@ VILLAGE.engine = {
       }
     });
 
-    // Prevent context menu
-    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    // Prevent default context menu & emit right-click bus event
+    canvas.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const worldPos = this.screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
+      VILLAGE.bus.emit('input:rightclick', { screenX: e.clientX, screenY: e.clientY, worldPos });
+    });
 
     // Mouse Wheel (Zoom smoothly towards pointer)
     canvas.addEventListener('wheel', (e) => {
@@ -301,5 +306,6 @@ VILLAGE.engine = {
     if (VILLAGE.economy) VILLAGE.economy.update(this.state, dt);
     if (VILLAGE.events) VILLAGE.events.update(this.state, dt);
     if (VILLAGE.ui) VILLAGE.ui.update(this.state, dt);
+    if (VILLAGE.victory) VILLAGE.victory.update(this.state, dt);
   }
 };

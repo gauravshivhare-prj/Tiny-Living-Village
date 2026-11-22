@@ -44,9 +44,10 @@ tiny-living-village/
     ├── memory.js       # Narrative Engineer: Episodic memory records & generative diary
     ├── economy.js      # Production Specialist: Resource loops, building costs & construction
     ├── events.js       # Dynamic Events: Weather cycles, creeper scares, festivals, traders
-    ├── ui.js           # UI/UX Engineer: Floating HUD, side drawer, portrait renderer, ticker
-    ├── audio.js        # Audio Synthesizer: Procedural SFX & generative ambient lullaby
+    ├── ui.js           # UI/UX Engineer: Floating HUD, side drawer, portrait renderer, ticker, toasts, tooltips
+    ├── audio.js        # Audio Synthesizer: Procedural SFX, victory fanfare & generative ambient lullaby
     ├── save.js         # Persistence: Versioned LocalStorage serialization & restoration
+    ├── victory.js      # Progression Systems: 5 Win conditions, milestone rewards & victory screen
     └── main.js         # Game Director: Boot sequence, title screen, 4-step tutorial
 ```
 
@@ -256,3 +257,38 @@ Located in `VILLAGE.config.DRAMA_KNOBS`:
 - [x] **Day/Night & Multi-Pass Lighting**: Smooth celestial palette transitions with campfire/window light masks.
 - [x] **Rumor Network Overlay**: Interactive visualizer showing information flow and confidence.
 - [x] **State Persistence**: Versioned LocalStorage auto-save and manual restore.
+- [x] **Visual Overhaul (v2 Graphics)**: Multi-layer swaying trees, 4-tier crops, pseudo-3D building facades, animated campfire embers, eye blinks, skin tones, and job tools.
+- [x] **Interactive Player Agency**: Right-click context menu (Feed, Rest, Whisper Rumors), hover tooltips, and building inspection/upgrades.
+- [x] **Winnable Progression**: 5 Win conditions, live goals sidebar, celebration milestones, and victory fanfare screen.
+
+---
+
+## 9. Enhanced Visuals, Interactivity & Victory Progression
+
+### 🎨 Visual Overhaul (v2 Graphics)
+- **Living Landscape**: 3-tone grass variation with scattered blades; organic multi-harmonic river ripples with shoreline foam; stone clusters with moss and fracture lines.
+- **Dynamic Flora**: 3-layer trees that gently sway in the breeze (`Math.sin(tick)`); 4-stage crops from tender sprouts to ripe golden wheat; scarecrow details.
+- **Architectural Depth**: Buildings have shaded side walls for isometric depth, window flower boxes, multi-layered roofs, and drifting chimney smoke puffs.
+- **Animated Characters**: 14px detailed villager sprites featuring skin tone diversity, custom job props (rake, axe, headlamp glow, merchant satchel, toolbelt), eye blinking with eye shines, and mood emotion indicators.
+- **Atmospheric Celestial Engine**: Smooth sky gradient background, 120 twinkling multi-size stars, crescent moon cutout, and golden dawn god-rays.
+- **Particle System**: Real-time simulated embers, chimney smoke, rain droplets, floating hearts, and festive celebration stars.
+
+### 🎮 Player Interactivity & Agency
+- **Right-Click Context Menu**:
+  - `👁️ Inspect`: Opens the detailed profile drawer.
+  - `🍞 Give Food`: Spend 5 village food to nourish a starving neighbor (+30 hunger).
+  - `😴 Send to Rest`: Order a tired villager back to their home bed.
+  - `💬 Whisper Rumor`: Secretly inject custom gossip directly into a villager's beliefs to trigger emergent village feuds or alliances!
+- **Hover Tooltips**: Glancing across the valley displays the villager's name, job icon, and real-time mood emoji.
+- **Building Management**: Clicking any building reveals its assigned workers, production output, and allows instant upgrading or demolition.
+- **Toast Notifications**: Floating event notifications alert you to feuds, traveling traders, festival celebrations, and night scares.
+
+### 🏆 Win Conditions & Milestones
+- **The 5 Goals for Village Prosperity**:
+  1. *Thriving Population*: All 12 villagers alive with Mood > 40%.
+  2. *Food Security*: 80+ Food in reserves.
+  3. *Built Settlement*: 6+ village structures constructed.
+  4. *Social Harmony*: 0 active feuds across the entire valley.
+  5. *Economic Prosperity*: 30+ Emeralds accumulated.
+- **Settlement Milestones**: Day 3 (*Sprouting Hamlet*), Day 7 (*Cozy Village*), Day 15 (*Legendary Settlement*).
+- **Victory Screen**: Reaching all 5 goals triggers an animated celebration with falling confetti, a synthesized brass arpeggio fanfare, complete gameplay statistics, and the option to keep playing in sandbox mode.
