@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiny Living Village</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Main Simulation Viewport -->
+  <div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Top HUD Bar -->
+    <header id="topHud">
+      <!-- Village Resources -->
+      <div class="hud-group resources-group">
+        <div class="res-badge" title="Wood"><span class="res-icon">🪵</span> <span id="resWood">60</span></div>
+        <div class="res-badge" title="Stone"><span class="res-icon">🪨</span> <span id="resStone">40</span></div>
+        <div class="res-badge" title="Food"><span class="res-icon">🌾</span> <span id="resFood">50</span></div>
+        <div class="res-badge" title="Emeralds"><span class="res-icon">💎</span> <span id="resEmeralds">5</span></div>
+      </div>
+
+      <!-- Time & Day -->
+      <div class="hud-group time-group">
+        <span id="hudDay" class="hud-day">Day 1</span>
+        <span id="hudTime" class="hud-time">06:00</span>
+        <span id="hudWeather" class="weather-pill">☀️ Clear</span>
+      </div>
+
+      <!-- Simulation Controls -->
+      <div class="hud-group controls-group">
+        <div class="speed-buttons">
+          <button id="btnPause" class="hud-btn" title="Pause (Space)">⏸</button>
+          <button id="btnSpeed1" class="hud-btn active" title="1x Speed (1)">1x</button>
+          <button id="btnSpeed2" class="hud-btn" title="2x Speed (2)">2x</button>
+          <button id="btnSpeed4" class="hud-btn" title="4x Speed (4)">4x</button>
+        </div>
+        <button id="btnRumorMap" class="hud-btn" title="Toggle Rumor Network Visualizer (R)">🕸️ Rumor Map</button>
+        <button id="btnMute" class="hud-btn" title="Mute Audio (M)">🔊 Sound</button>
+        <button id="btnSaveGame" class="hud-btn" title="Quick Save">💾 Save</button>
+        <button id="btnSettings" class="hud-btn" title="Settings">⚙️</button>
+        <button id="btnHelp" class="hud-btn" title="Tutorial & Help">❓</button>
+      </div>
+    </header>
+
+    <!-- Bottom Build Hotbar -->
+    <nav id="buildBar" class="build-bar">
+      <div class="build-header">BUILD</div>
+      <button class="build-btn" data-build-type="house" title="House (30 Wood, 15 Stone) - Cozy beds for villagers to rest">
+        <span class="b-icon">🏠</span><span class="b-name">House</span>
+      </button>
+      <button class="build-btn" data-build-type="farm" title="Farm Plot (20 Wood, 10 Stone) - Grows food when tended by farmers">
+        <span class="b-icon">🌾</span><span class="b-name">Farm</span>
+      </button>
+      <button class="build-btn" data-build-type="well" title="Well (15 Wood, 20 Stone) - Village gathering spot for daytime chats">
+        <span class="b-icon">⛲</span><span class="b-name">Well</span>
+      </button>
+      <button class="build-btn" data-build-type="market" title="Market Stall (25 Wood, 10 Stone) - Traders convert goods to emeralds">
+        <span class="b-icon">⛺</span><span class="b-name">Market</span>
+      </button>
+      <button class="build-btn" data-build-type="watchtower" title="Watchtower (35 Wood, 30 Stone) - Guards against night scares and creeps">
+        <span class="b-icon">🗼</span><span class="b-name">Tower</span>
+      </button>
+      <button class="build-btn" data-build-type="campfire" title="Campfire (10 Wood, 10 Stone) - Evening gathering spot where rumors ignite">
+        <span class="b-icon">🔥</span><span class="b-name">Campfire</span>
+      </button>
+      <button class="build-btn btn-demolish" data-build-type="demolish" title="Demolish Building - Reclaims 50% construction materials">
+        <span class="b-icon">⛏️</span><span class="b-name">Demolish</span>
+      </button>
+    </nav>
+
+    <!-- Bottom Live Event Feed Ticker -->
+    <footer id="eventTickerContainer">
+      <span class="ticker-label">NEWS:</span>
+      <div id="eventTicker" class="ticker-content">
+        <span class="ticker-item">Village founded. 12 settlers have arrived.</span>
+      </div>
+    </footer>
+
+    <!-- Side Inspector Panel (Villager Profile, Relations, Beliefs & Diary) -->
+    <aside id="villagerPanel" class="villager-panel hidden">
+      <div class="panel-header">
+        <canvas id="vPortraitCanvas" width="96" height="96"></canvas>
+        <div class="panel-identity">
+          <div class="panel-title-row">
+            <h2 id="vPanelName">Alden</h2>
+            <button id="btnClosePanel" class="btn-close" title="Close (Esc)">✕</button>
+          </div>
+          <span id="vPanelJob" class="job-badge">FARMER</span>
+          <p id="vPanelBio" class="panel-bio">Honest and patient tiller of the soil.</p>
+          <div class="activity-status">
+            <span class="status-indicator">●</span> <span id="vPanelActivity">Working the fields</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Needs Progress Bars -->
+      <section class="needs-section">
+        <div class="need-bar-container">
+          <div class="need-label-row"><span>Hunger</span><span id="valHunger">85%</span></div>
+          <div class="bar-track"><div id="barHunger" class="bar-fill hunger-fill" style="width: 85%;"></div></div>
+        </div>
+        <div class="need-bar-container">
+          <div class="need-label-row"><span>Energy</span><span id="valEnergy">90%</span></div>
+          <div class="bar-track"><div id="barEnergy" class="bar-fill energy-fill" style="width: 90%;"></div></div>
+        </div>
+        <div class="need-bar-container">
+          <div class="need-label-row"><span>Social</span><span id="valSocial">60%</span></div>
+          <div class="bar-track"><div id="barSocial" class="bar-fill social-fill" style="width: 60%;"></div></div>
+        </div>
+        <div class="need-bar-container">
+          <div class="need-label-row"><span>Mood</span><span id="valMood">78%</span></div>
+          <div class="bar-track"><div id="barMood" class="bar-fill mood-fill" style="width: 78%;"></div></div>
+        </div>
+      </section>
+
+      <!-- Panel Navigation Tabs -->
+      <div class="panel-tabs">
+        <button class="panel-tab-btn active" data-tab="relationships">Relationships</button>
+        <button class="panel-tab-btn" data-tab="beliefs">Rumors &amp; Beliefs</button>
+        <button class="panel-tab-btn" data-tab="diary">Daily Diary</button>
+      </div>
+
+      <!-- Tab Contents Container -->
+      <div class="panel-body">
+        <div id="tabContentRelationships" class="tab-pane"></div>
+        <div id="tabContentBeliefs" class="tab-pane" style="display: none;"></div>
+        <div id="tabContentDiary" class="tab-pane" style="display: none;"></div>
+      </div>
+    </aside>
+
+    <!-- Title Screen Modal -->
+    <div id="titleModal" class="modal-overlay">
+      <div class="modal-card title-card">
+        <div class="title-logo">
+          <h1 class="game-title">Tiny Living Village</h1>
+          <p class="game-subtitle">A top-down cozy simulation where stories emerge on their own</p>
+        </div>
+        <div class="title-menu">
+          <button id="btnTitleContinue" class="btn-primary btn-large btn-disabled" disabled>Continue Village</button>
+          <button id="btnTitleNew" class="btn-primary btn-large">New Village (Random)</button>
+          <button id="btnTitleSeed" class="btn-secondary">New Village with Seed</button>
+          <button id="btnTitleTutorial" class="btn-secondary">How to Play (Tutorial)</button>
+        </div>
+        <div class="title-footer">
+          <span>Pure HTML5 Canvas &amp; Web Audio • Zero external assets • 12 Living Villagers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Step Interactive Tutorial Modal -->
+    <div id="tutorialModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card tutorial-card">
+        <div class="tut-header">
+          <h3 id="tutTitle">Welcome to Tiny Living Village</h3>
+          <span id="tutStepIndicator" class="tut-step">Step 1 of 4</span>
+        </div>
+        <div id="tutBody" class="tut-content">
+          <!-- Dynamic tutorial slide content -->
+        </div>
+        <div class="tut-actions">
+          <button id="btnTutSkip" class="btn-secondary">Skip Tutorial</button>
+          <button id="btnTutNext" class="btn-primary">Next Step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card settings-card">
+        <h3>Simulation Settings</h3>
+        <div class="setting-row">
+          <label for="settingVolume">Master Audio Volume</label>
+          <input type="range" id="settingVolume" min="0" max="1" step="0.05" value="0.5">
+        </div>
+        <div class="setting-row">
+          <label for="settingDrama">Drama &amp; Conflict Multiplier</label>
+          <input type="range" id="settingDrama" min="0.5" max="2.0" step="0.1" value="1.0">
+          <small>Adjusts how easily short-tempered villagers argue and mutate rumors.</small>
+        </div>
+        <div class="setting-actions">
+          <button id="btnCloseSettings" class="btn-primary">Done</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts in strict dependency order (plain scripts, one global VILLAGE namespace) -->
+  <script src="js/config.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/villagers.js"></script>
+  <script src="js/social.js"></script>
+  <script src="js/memory.js"></script>
+  <script src="js/economy.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
