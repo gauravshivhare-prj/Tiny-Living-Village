@@ -1,0 +1,37 @@
+# Netlify Production Configuration for Tiny Living Village
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Directory to publish (root directory containing index.html, style.css, js/)
+  publish = "."
+  # No build command needed - pure vanilla HTML5, CSS3, and JavaScript
+  command = ""
+
+# Single Page Application routing fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Global Security & Content Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=()"
+
+# Fast revalidation for application code
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/style.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "text/css; charset=utf-8"
